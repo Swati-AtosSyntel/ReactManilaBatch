@@ -1,0 +1,229 @@
+==>working with list and keys
+First, let’s review how you transform lists in JavaScript.
+
+Given the code below, we use the map() function to take an array of numbers and double their values. We assign the new array returned by map() to the variable doubled and log it:
+
+const numbers = [1, 2, 3, 4, 5];//list
+const doubled = numbers.map((number) => number * 2);
+console.log(doubled);
+-----------------
+In reactJS
+This code displays a bullet list of numbers between 1 and 5.
+const numbers=['one' ,'two','three' ,4 ,5 ];
+const listitems= numbers.map(  
+(numbers)=><li>{numbers}</li>
+);
+ReactDOM.render(<ul>{listitems} </ul>,document.getElementById('root'))
+------------------------------------------------------------------
+Same above example converted to JSX class component
+-----------------------
+part 1 :html 
+<div id="root"></div>
+
+part 2: css
+css
+
+* {
+  font-family: sans-serif;
+  margin: 0;
+}
+button {
+  height: 40px;
+  width: 200px;
+}
+
+part 3: jsx
+---------------------------
+function ListItem(props) {
+  return <li>{props.value}</li>;
+}
+
+function NumberList(props) {
+  const numbers = props.numbers;
+  return (
+    <ul>
+      {numbers.map((number) =>
+        <ListItem key={number.toString()}
+                  value={number} />
+      )}
+    </ul>
+  );
+}
+
+const numbers = [1, 2, 3, 4, 5];
+ReactDOM.render(
+  <NumberList numbers={numbers} />,
+  document.getElementById('root')
+);
+-----------------------------------------------
+example 2: for keys
+This example  create Content elements with unique index (i). The map function will create three elements from our data array. Since the key value needs to be unique for every element, we will assign i as a key for each created element.
+
+class App extends React.Component {
+   constructor() {
+      super();		
+      this.state = {
+         data:[
+            {
+               component: 'First...',
+               id: 10
+            },
+            {
+               component: 'Second...',
+               id: 20
+            },
+            {
+               component: 'Third...',
+               id: 30
+            }
+         ]
+      }
+   }
+   render() {
+      return (
+         <div>
+            <div>
+               {this.state.data.map((dynamicComponent, i) => <Content 
+                  key = {i} componentData = {dynamicComponent}/>)}
+            </div>
+         </div>
+      );
+   }
+}
+class Content extends React.Component {
+   render() {
+      return (
+         <div>
+            <div>{this.props.componentData.component}</div>
+            <div>{this.props.componentData.id}</div>
+         </div>
+      );
+   }
+}
+ReactDOM.render(<App/>, document.getElementById('root'));
+-------------------------------------------------
+pushing items to an array
+
+class ChildA extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: ['a', 'b' , 'c', 'd', 'e'],
+      textvalue : "",
+      test:""
+    }
+    this.handleAddTodoItem = this.handleAddTodoItem.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handledelTodoItem = this.handledelTodoItem.bind(this)
+  }
+  handleChange(e) {
+    this.setState({
+      textvalue:e.target.value
+    })
+  }
+  handleAddTodoItem() {   
+ this.state.value.push(this.state.textvalue)
+    this.setState(
+      this.state
+    )
+   
+  }
+  handledelTodoItem(v){
+    for(var i = 0; i < this.state.value.length; i++){
+      if(this.state.value[i] == v){
+         delete this.state.value[i]
+      }
+    }
+    this.setState({
+      value:this.state.value
+    })
+    console.log(this.state.value)
+  }
+  render() {
+    let { value } = this.state;
+    return (
+      <div>
+        <input type="text" placeholder="????" className="text" onChange={ this.handleChange } />
+        <button className="addbutton" onClick={this.handleAddTodoItem}>Add Todo Item</button>
+        {value.map((v) => {
+          return <div><h1 className="font"><button className="allbutton" onClick={this.handledelTodoItem.bind(this, v)}>DelTodoItem</button>{v}</h1></div>         
+        })}
+      </div>
+    )
+  }
+}
+class Container extends React.Component {
+  render() {
+    return (
+      <ChildA  /> 
+    )
+  }
+}
+
+ReactDOM.render(<ChildA />, document.getElementById('app'));
+
+----------------------------------------------
+Assignment : Create a main Component App , merge it with the component Header and TableRow
+
+set the state for owner component (App). The Header component is just added like in the last example since it doesn't need any state. Instead of content tag, we are creating table and tbody elements, where we will dynamically insert TableRow for every object from the data array.
+
+class App extends React.Component {
+   constructor() {
+      super();
+      this.state = {
+         data: 
+         [
+            {
+               "id":1,
+               "name":"Foo",
+               "age":"20"
+            },
+            {
+               "id":2,
+               "name":"Bar",
+               "age":"30"
+            },
+            {
+               "id":3,
+               "name":"Baz",
+               "age":"40"
+            }
+         ]
+      }
+   }
+   render() {
+      return (
+         <div>
+            <Header/>
+            <table>
+               <tbody> {this.state.data.map((person, i) => <TableRow key = {i} 
+                     data = {person} />)}
+               </tbody>
+            </table>
+         </div>
+      );
+   }
+}
+class Header extends React.Component {
+   render() {
+      return (
+         <div>
+            <h1>Header</h1>
+         </div>
+      );
+   }
+}
+class TableRow extends React.Component {
+   render() {
+      return (
+         <tr>
+            <td>{this.props.data.id}</td>
+            <td>{this.props.data.name}</td>
+            <td>{this.props.data.age}</td>
+         </tr>
+      );
+   }
+}
+
+ReactDOM.render(<App/>, document.getElementById('root'));
+------------------------------------------------------------------------------

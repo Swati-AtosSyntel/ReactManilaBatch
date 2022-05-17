@@ -1,0 +1,593 @@
+session 3:
+--State and Lifecycle
+--Handling Events
+--Conditional Rendering
+--------------------------
+React State
+--React components has a built-in state object.
+--The state object is where you store property values that belongs to the component.
+--When the state object changes, the component re-renders.
+
+State is similar to props, but it is private and fully controlled by the component.
+We mentioned before that components defined as classes have some additional features.
+Local state is exactly that: a feature available only to classes.
+
+You can convert a function component like Clock to a class in five steps:
+
+1.Create an ES6 class, with the same name, that extends React.Component.
+2.Add a single empty method to it called render().
+3.Move the body of the function into the render() method.
+4.Replace props with this.props in the render() body.
+5.Delete the remaining empty function declaration
+
+Activity : Adding a local state to the class
+
+html part :
+
+<div id="root">
+    <!-- This element's contents will be replaced with your component. -->
+</div>
+--------------------------
+js part:
+class Clock extends React.Component {
+  
+constructor(props) {
+    super(props);
+    this.state = {date:new Date()};
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Clock />,
+  document.getElementById('root')
+);
+------------------------------
+Activity : online Lab
+--jsx
+class HelloWithState extends React.Component {
+    constructor(props){
+        //Since we are extending the default constructor,
+        //handle default activities first.
+       super(props);    
+        //Extract the firstname from the prop
+   let firstName = this.props.name;         
+        //In the constructor, feel free to modify the
+        //state property on the current context.
+        this.state = {
+            name: firstName
+        }
+    } 
+    render() {
+        return <h1>Hello, {this.state.name}!</h1>
+    }
+}
+ReactDOM.render(<HelloWithState name=" James 2" />, 
+                document.getElementById('mainWithState'));
+
+---html
+
+<div id="mainWithState"></div>
+----------------------------------------------------------------------
+
+==>Creating the state Object
+The state object is initialized in the constructor:
+
+Example:
+Specify the state object in the constructor method:
+
+class Car extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {brand: "Ford"};
+  }
+  render() {
+    return (
+      <div>
+        <h1>My Car</h1>
+      </div>
+    );
+  }
+}
+ 
+
+The state object can contain as many properties as you like:
+
+Example:
+Specify all the properties your component need:
+
+class Car extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      brand: "Ford",
+      model: "Mustang",
+      color: "red",
+      year: 1964
+    };
+  }
+  render() {
+    return (
+      <div>
+        <h1>My Car</h1>
+      </div>
+    );
+  }
+}
+  
+
+==>Using the state Object
+Refer to the state object anywhere in the component by using the this.state.propertyname syntax:
+
+Example:
+Refer to the state object in the render() method:
+
+class Car extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      brand: "Ford",
+      model: "Mustang",
+      color: "red",
+      year: 1964
+    };
+  }
+  render() {
+    return (
+      <div>
+        <h1>My {this.state.brand}</h1>
+        <p>
+          It is a {this.state.color}
+          {this.state.model}
+          from {this.state.year}.
+        </p>
+      </div>
+    );
+  }
+}
+ 
+==>Changing the state Object
+To change a value in the state object, use the this.setState() method.
+
+When a value in the state object changes, the component will re-render, meaning that the output will change according to the new value(s).
+
+Example:
+Add a button with an onClick event that will change the color property:
+
+class Car extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      brand: "Ford",
+      model: "Mustang",
+      color: "red",
+      year: 1964
+    };
+  }
+  changeColor = () => {
+    this.setState({color: "blue"});
+  }
+  render() {
+    return (
+      <div>
+        <h1>My {this.state.brand}</h1>
+        <p>
+          It is a {this.state.color}
+          {this.state.model}
+          from {this.state.year}.
+        </p>
+        <button
+          type="button"
+          onClick={this.changeColor}
+        >Change color</button>
+      </div>
+    );
+  }
+}
+
+Using State Correctly
+There are few things you should know about setState().
+
+**********Do Not Modify State Directly
+For example, this will not re-render a component:
+
+// Wrong
+this.state.comment = 'Hello';
+Instead, use setState():
+
+// Correct
+this.setState({comment: 'Hello'});
+The only place where you can assign this.state is the constructor.
+
+*********State Updates May Be Asynchronous
+React may batch multiple setState() calls into a single update for performance.
+
+Because this.props and this.state may be updated asynchronously, you should not rely on their values for calculating the next state.
+
+For example, this code may fail to update the counter:
+
+// Wrong
+this.setState({
+  counter: this.state.counter + this.props.increment,
+});
+To fix it, use a second form of setState() that accepts a function rather than an object. That function will receive the previous state as the first argument, and the props at the time the update is applied as the second argument:
+
+// Correct
+this.setState((state, props) => ({
+  counter: state.counter + props.increment
+}));
+We used an arrow function above, but it also works with regular functions:
+
+// Correct
+this.setState(function(state, props) {
+  return {
+    counter: state.counter + props.increment
+  };
+});
+
+--------------------------------
+===============================================================================================---------------------------------------------------------------------------------
+Lifecycle Methods.
+
+Adding Lifecycle Methods to a Class
+In applications with many components, it’s very important to free up resources taken by the components when they are destroyed.
+We want to set up a timer whenever the Clock is rendered to the DOM for the first time. This is called “mounting” in React.
+We also want to clear that timer whenever the DOM produced by the Clock is removed. This is called “unmounting” in React.
+
+We can declare special methods on the component class to run some code when a component mounts and unmounts:
+The componentDidMount() method runs after the component output has been rendered to the DOM. This is a good place to set up a timer:
+componentDidMount() {
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
+
+While this.props is set up by React itself and this.state has a special meaning, you are free to add additional fields to the class manually if you need to store something that doesn’t participate in the data flow (like a timer ID).
+
+We will tear down the timer in the componentWillUnmount() lifecycle method:
+
+componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+Finally, we will implement a method called tick() that the Clock component will run every second.
+
+It will use this.setState() to schedule updates to the component local state:
+------
+Activity : LifeCycle Methods
+import React from "react";
+export default class Clock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {date: new Date()};
+  }
+
+  componentDidMount() {
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+---------------------------------------------------------------
+Example for Other LifeCycle Methods:
+
+class App extends React.Component {
+   constructor(props) {
+      super(props);
+      this.state = {
+         data: 0
+      }
+      this.setNewNumber = this.setNewNumber.bind(this);
+  
+   };
+   setNewNumber() {
+      this.setState({data: this.state.data + 1})
+   }
+
+   render() {
+      return (
+         <div>
+            <button onClick = {this.setNewNumber}>INCREMENT</button>
+            <Content myNumber = {this.state.data}></Content>
+         </div>
+      );
+   }
+}
+class Content extends React.Component {
+   componentWillMount() {
+      console.log('Component WILL MOUNT!')
+   }
+   componentDidMount() {
+      console.log('Component DID MOUNT!')
+   }
+   componentWillReceiveProps(newProps) {    
+      console.log('Component WILL RECIEVE PROPS!')
+   }
+   shouldComponentUpdate(newProps, newState) {
+      return true;
+   }
+   componentWillUpdate(nextProps, nextState) {
+      console.log('Component WILL UPDATE!');
+   }
+   componentDidUpdate(prevProps, prevState) {
+      console.log('Component DID UPDATE!')
+   }
+   componentWillUnmount() {
+      console.log('Component WILL UNMOUNT!')
+   }
+   render() {
+      return (
+         <div>
+            <h3>{this.props.myNumber}</h3>
+         </div>
+      );
+   }
+}
+//export default App;
+
+ReactDOM.render(<App/>, document.getElementById('root'));
+
+setTimeout(() => {
+   ReactDOM.unmountComponentAtNode(document.getElementById('root'));}, 10000);
+----------------------------------------------------------------------
+
+----------------------
+Let’s quickly recap what’s going on and the order in which the methods are called:
+
+When <Clock /> is passed to ReactDOM.render(), React calls the constructor of the Clock component. Since Clock needs to display the current time, it initializes this.state with an object including the current time. We will later update this state.
+
+React then calls the Clock component’s render() method. This is how React learns what should be displayed on the screen. React then updates the DOM to match the Clock’s render output.
+
+When the Clock output is inserted in the DOM, React calls the componentDidMount() lifecycle method. Inside it, the Clock component asks the browser to set up a timer to call the component’s tick() method once a second.
+
+Every second the browser calls the tick() method. Inside it, the Clock component schedules a UI update by calling setState() with an object containing the current time. Thanks to the setState() call, React knows the state has changed, and calls the render() method again to learn what should be on the screen. This time, this.state.date in the render() method will be different, and so the render output will include the updated time. React updates the DOM accordingly.
+
+If the Clock component is ever removed from the DOM, React calls the componentWillUnmount() lifecycle method so the timer is stopped.
+
+----------------------------------------------
+
+======================================================
+Topic : Handling Events 
+ Lets you handle the elements on the page.
+
+Example 1:
+This is a simple example where we will only use one component. We are just adding onClick event that will trigger updateState function once the button is clicked.
+
+html :
+<div id="root">
+</div>
+-----------------
+jsx:
+class App extends React.Component {
+   constructor(props) {
+      super(props);
+      
+      this.state = {
+         data: 'Initial data...'
+      }
+      this.updateState = this.updateState.bind(this);
+   };
+   updateState() {
+      this.setState({data: 'Data updated...'})
+   }
+   render() {
+      return (
+         <div>
+            <button onClick = {this.updateState}>CLICK</button>
+            <h4>{this.state.data}</h4>
+         </div>
+      );
+   }
+}
+ReactDOM.render(<App/>, document.getElementById('root'));
+-------------------------------------------------------
+*********test Pending********
+Assignment: Create a btton that increments the counter
+
+class CounterParent extends React.Component {
+  constructor(props) {
+    super(props);
+ 
+    this.state = {
+      count: 0
+    };
+ 
+    this.increase = this.increase.bind(this);
+  }
+ 
+  increase(e) {
+    this.setState({
+      count: this.state.count + 1
+    });
+  }
+ 
+  render() {
+    var backgroundStyle = {
+      padding: 50,
+      backgroundColor: "#FFC53A",
+      width: 250,
+      height: 100,
+      borderRadius: 10,
+      textAlign: "center"
+    };
+ 
+    var buttonStyle = {
+      fontSize: "1em",
+      width: 30,
+      height: 30,
+      fontFamily: "sans-serif",
+      color: "#333",
+      fontWeight: "bold",
+      lineHeight: "3px"
+    };
+ 
+    return (
+      <div style={backgroundStyle}>
+        <Counter display={this.state.count} />
+        <button onClick={this.increase} style={buttonStyle}>+</button>
+      </div>
+    );
+  }
+}
+
+---------------------------------------------------
+Additional Example:create a toggle button on/off
+-----------------
+part 1: HTML
+<div id="root">
+</div>
+--------------------
+part 2:Jsx
+
+class Toggle extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {isToggleOn: true};
+
+    // This binding is necessary to make `this` work in the callback
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.setState(prevState => ({
+      isToggleOn: !prevState.isToggleOn
+    }));
+  }
+
+  render() {
+    return (
+      <button onClick={this.handleClick}>
+        {this.state.isToggleOn ? 'ON' : 'OFF'}
+      </button>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Toggle />,
+  document.getElementById('root')
+);
+
+-----------------------------------
+topic : conditional rendering 
+----------css
+* {
+  font-family: sans-serif;
+  margin: 0;
+}
+button {
+  height: 30px;
+  width: 100px;
+}
+.warning {
+  background-color: red;
+  text-align: center;
+  width: 100%;
+  padding: 10px;
+
+  font-size: 14pt;
+  color: white;
+}
+---------html
+<div id="root"></div>
+
+--jsx
+function UserGreeting(props) {
+  return <h1>Welcome back!</h1>;
+}
+
+function GuestGreeting(props) {
+  return <h1>Please sign up.</h1>;
+}
+
+function Greeting(props) {
+  const isLoggedIn = props.isLoggedIn;
+  if (isLoggedIn) {
+    return <UserGreeting />;
+  }
+  return <GuestGreeting />;
+}
+
+  <Greeting isLoggedIn={false} />
+
+
+ReactDOM.render(
+  // Try changing to isLoggedIn={true}:
+  <Greeting isLoggedIn={false} />,
+  document.getElementById('root')
+);
+
+------------------------
+Example 2: Assignment
+create a component MailBox with property unreadMessages.
+ <Mailbox unreadMessages={messages} />
+Here messages is a array with text messages.
+show the number of unread messages in the mailbox
+
+--html
+<div id="root"></div>
+---css
+* {
+  font-family: sans-serif;
+  margin: 0;
+}
+button {
+  height: 40px;
+  width: 200px;
+}
+
+--jsx
+function Mailbox(props) {
+  const unreadMessages = props.unreadMessages;
+  return (
+    <div>
+      <h1>Hello!</h1>
+      {unreadMessages.length > 0 &&
+        <h2>
+          You have {unreadMessages.length} unread messages.
+        </h2>
+      }
+    </div>
+  );
+}
+
+const messages = ['React', 'Re: React', 'Re:Re: React','one more'];
+ReactDOM.render(
+  <Mailbox unreadMessages={messages} />,
+  document.getElementById('root')
+);
+
+-----------
+Note:
+It works because in JavaScript, true && expression always evaluates to expression, and false && expression always evaluates to false.
+
+Therefore, if the condition is true, the element right after && will appear in the output. If it is false, React will ignore and skip it.
+

@@ -1,0 +1,626 @@
+React Components
+the entire application is divided into a small logical group of code, which is known as components.
+
+A Component is considered as the core building blocks of a React application. It makes the task of building UIs much easier. Each component exists in the same space, but they work independently from one another and merge all in a parent component, which will be the final UI of your application.
+
+Every React component have their own structure, methods as well as APIs. They can be reusable as per your need.
+
+In ReactJS, we have mainly two types of components. They are
+
+1.Functional Components
+	--no state
+	--After 16.8 even functions can have state
+2. Class Components
+ --state 
+------------------------------------------------------------------------------------------------
+1. Functional Components
+In React, function components are a way to write components that only contain a render method and don't have their own state. They are simply JavaScript functions that may or may not receive data as parameters. We can create a function that takes props(properties) as input and returns what should be rendered. A valid functional component can be shown in the below example.
+
+function WelcomeMessage(props) {  
+  return <h1>Welcome to the , {props.name}</h1>;  
+}  
+The functional component is also known as a stateless component because they do not hold or manage state.
+----------------------------------------------------------------------------------------------------
+use the online code editor :
+https://codepen.io/pen
+---------------------------------------------------------
+demo 1:function component
+import React from 'react'; 
+import ReactDOM from 'react-dom'; 
+  
+// This is a functional component 
+function Welcome() 
+{ 
+        return <h1>Hello World!</h1> 
+}    
+ReactDOM.render( 
+    <Welcome />,  
+    document.getElementById("root") 
+); 
+
+We call the ReactDOM.render() with as the first parameter.
+React then calls the component Welcome, which returns <h1>Hello World!</h1>; as the result.
+Then the ReactDOM efficiently updates the DOM to match with the returned element and renders that element to the DOM element with id as “root”.
+---------------------------------------------------------------------------------------
+demo 2: jsx styling
+import React, { Component } from 'react';  
+class App extends Component{  
+   render(){  
+     var myStyle = {  
+         fontSize: 80,  
+         fontFamily: 'Courier',  
+         color: '#003300'  
+      }  
+      return (  
+         <div>  
+            <h1 style = {myStyle}>www.stack.com</h1>  
+         </div>  
+      );  
+   }  
+}  
+export default App; 
+-------------------------------------------------------------------------------------------------
+function with props
+one way binding :  App(Parent) ==>data flows===>Child Component
+
+pass information to a Component.React allows us to pass information to a Component using something called props (stands for properties). Props are basically kind of global variable or object.
+this.props.propName;
+We can access any prop from inside a component’s class using the above syntax. The ‘this.props’ is a kind of global object which stores all of a components props. The propName, that is the names of props are keys of this object.
+
+function Card(props)
+{
+  return(  
+    <div className="card">
+        <p>{props.name}</p>
+        <p> {props.email} </p>
+        </div>    
+  );  
+}
+var app=
+    <div>
+    <Card name="John123" email="john123@gmail.com" />
+    <Card name="John" email="john123@gmail.com" />
+    <Card name="John1" email="john123@gmail.com" />    
+    </div>
+
+ReactDOM.render(app, document.getElementById('app1'))
+
+------------------------------------------------------------------------------------------------------
+Example 2:
+js:
+function formatDate(date) {
+  return date.toLocaleDateString();
+}
+
+function Comment(props) {
+  return (
+    <div>
+      <div>
+        <img          
+          src={props.author.avatarUrl}
+          alt={props.author.name}
+        />
+        <div>
+          {props.author.name}
+        </div>
+      </div>
+      <div>{props.text}</div>
+      <div>
+        {formatDate(props.date)}
+      </div>
+    </div>
+  );
+}
+
+const comment = {
+  date: new Date(),
+  text: 'I hope you enjoy learning React!',
+  author: {
+    name: 'Hello Kitty',
+    avatarUrl: 'https://placekitten.com/g/64/64',
+  },
+};
+ReactDOM.render(
+  <Comment
+    date={comment.date}
+    text={comment.text}
+    author={comment.author}
+  />,
+  document.getElementById('root')
+);
+-----------------------------------------------------------------------------------------------
+Example :
+you can use JSX inside of if statements assign it to variables, accept it as arguments, and return it from functions:
+
+part 1: HTML
+<div id="root"></div>
+---------------------
+part 2: JSX
+function formatName(user) {
+  return user.firstName + ' ' + user.lastName;
+}
+
+function getGreeting(user) {
+  if (user) {
+    return <h1>Hello, {formatName(user)}!</h1>;
+  }
+  return <h1>Hello, Stranger.</h1>;
+}
+
+const user ={
+  firstName:'John',
+  lastName:'P'
+}
+
+const element = <h1>Hello, {formatName(user)}!</h1>;
+const element1 = <h1>Hello, {getGreeting(user)}!</h1>;
+ReactDOM.render(element, document.getElementById('root'));
+ReactDOM.render(element1, document.getElementById('root'));
+============================================
+Session prac 2:Components and Props
+Components let you split the UI into independent, reusable pieces, and think about each piece in isolation Conceptually, components are like JavaScript functions. They accept arbitrary inputs (called “props”) and return React elements describing what should appear on the screen.
+
+You can create components in two ways
+Method 1: By Creating a Javascript function
+The simplest way to define a component is to write a JavaScript function:
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+
+This function is a valid React component because it accepts a single “props” (which stands for properties) object argument with data and returns a React element. We call such components “function components” because they are literally JavaScript functions.
+----------------------------------------------------------------------------------
+Components
+==>Class Components
+Class components are more complex than functional components. It requires you to extend from React. Component and create a render function which returns a React element. You can pass data from one class to other class components. You can create a class by defining a class that extends Component and has a render function. Valid class component is shown in the below example.
+
+class MyComponent extends React.Component {  
+  render() {  
+    return (  nde
+      <div>This is main component.</div>  
+    );  
+  }  
+}  
+The class component is also known as a stateful component because they can hold or manage local state. It can be explained in the below example.
+
+Demo 1: Composing components
+import React, { Component } from 'react';  
+class App extends React.Component {  
+   render() {  
+      return (  
+         <div>  
+            <First/>  
+            <Second/>  
+         </div>  
+      );  
+   }  
+}  
+class First extends React.Component {  
+   render() {  
+      return (  
+         <div>  
+            <h1>First component</h1>  
+         </div>  
+      );  
+   }  
+}  
+class Second extends React.Component {  
+   render() {  
+      return (  
+         <div>  
+            <h2>Second component</h2>  
+            <p>This websites contains the great CS tutorial.</p>  
+         </div>  
+      );  
+   }  
+}  
+export default App;  
+-----------------------------------------------------------------------
+Method 2:By creating a Class using ECs6
+
+class Welcome extends React.Component {
+  render() {
+    return <h1>Hello, {this.props.name}</h1>;
+  }
+}
+
+**Classes have some additional features 
+----------------------------------------
+Rendering a Component
+Previously, we only encountered React elements that represent DOM tags:
+
+const element = <div />;
+However, elements can also represent user-defined components:
+
+const element = <Welcome name="Sara" />;
+=========================================================
+Example 1: open the codepen.io
+
+Objective : creating a component
+
+step 1: HTML
+<div class="person">
+  <h2> Chhaya </h2>
+  <p> Chhayfsda.nikam@gmail.com </p>
+</div>
+<div id="p1"> 
+</div>
+
+step 2: css
+.person{
+  display:inline-block;
+  border: 2px solid ;
+}
+
+step 3:Js , note select the preprocessor as Babel, add the rect and the react DOM Lib.
+
+function Person(){
+  return(
+  <div className="person">
+  <h2> Chhaya123 </h2>
+  <p> Chhaya123.nikam@gmail.com </p>
+</div>
+  );
+}
+ReactDOM.render(<Person/> , document.querySelector("#p1"))
+---------------------------------------------------------------------------------------------
+Example 2: Passing data to the components , termed as props , we can give any other name
+
+part 1 css: 
+.person{
+  display:inline-block;
+  border: 2px solid ;
+  width:200px;
+}
+
+--------------
+part 2: jsx
+
+function Person(props){
+  return(
+  <div className="person">
+  <h2> {props.name} </h2>
+  <p> {props.email} </p>
+</div>
+  );
+}
+ReactDOM.render(<Person name="Jack" email="jack@gmail.com"/> , document.querySelector("#p1"))
+ReactDOM.render(<Person name="Jack123" email="jack123@gmail.com"/> , document.querySelector("#p2"))
+--------------------
+part 3: HTML
+<div class="person">
+  <h2> Chhaya </h2>
+  <p> Chhayfsda.nikam@gmail.com </p>
+</div>
+<div id="p1"> </div>
+<div id="p2"> </div>
+</div>
+
+===========================================
+Example 3: Let us improve the example 2 . In previous example we gave call to ReactDOM.render multiple times . We can also hook it into a one single event , by creating a variable , writing the jsx code in it.
+part 1: css
+.person{
+  display:inline-block;
+  border: 2px solid ;
+  width:200px;
+}
+
+---------------
+part 2: jsx
+function Person(props){
+  return(
+  <div className="person">
+  <h2> {props.name} </h2>
+  <p> {props.email} </p>
+</div>
+  );
+}
+var app=(
+<div>
+  <Person name="Jack" email="jack@gmail.com"/>
+  <Person name="Jack123" email="jack123@gmail.com"/>
+  </div>
+);
+ReactDOM.render(app , document.querySelector("#app"))
+
+------------------------------
+part 3: html
+<div id="app"> 
+</div>
+=====================================================================
+Example 4: Displaying fullname by joining firstName and LastName 
+
+Embedding Expressions in JSX
+In the example below, we declare a variable called name and then use it inside JSX by wrapping it in curly braces:
+-------
+part 1: In codepen the jsx code
+
+const name = 'John';
+const element = <h1>Hello, {name}</h1>;
+
+ReactDOM.render(
+  element,
+  document.getElementById('root')
+);
+-----------------------------
+part 2: HTML code
+
+<div id="root"></div>
+=========================================================================
+Example 5:
+you can use JSX inside of if statements assign it to variables, accept it as arguments, and return it from functions:
+
+part 1: HTML
+<div id="root"></div>
+---------------------
+part 2: JSX
+function formatName(user) {
+  return user.firstName + ' ' + user.lastName;
+}
+
+function getGreeting(user) {
+  if (user) {
+    return <h1>Hello, {formatName(user)}!</h1>;
+  }
+  return <h1>Hello, Stranger.</h1>;
+}
+
+const user ={
+  firstName:'John',
+  lastName:'P'
+}
+
+const element = <h1>Hello, {formatName(user)}!</h1>;
+
+const element1 = <h1>Hello, {getGreeting(user)}!</h1>;
+
+ReactDOM.render(element, document.getElementById('root'));
+
+ReactDOM.render(element1, document.getElementById('root'));
+====================================================================
+Example 6: Assignmnet --> create a component to add two numbers
+
+============================================
+Now let us create component using the class they are called as the pure React Components.
+--
+part 1: css
+.person{
+  display:inline-block;
+  border: 2px solid ;
+  width:200px;
+}
+---------
+class Card extends React.Component{
+  constructor(props)
+  {
+    super(props);
+  }
+  render()
+  {
+    return(
+    <div className="card">
+        <h2>{this.props.name} </h2>   
+        <p>{this.props.email} </p>
+     </div>
+    );
+  }  
+}
+var app=<div><Card name="Chhaya" email="chhaya@gmail.com"/> 
+    <Card name="Chhaya" email="chhaya@gmail.com"/>
+    <Card name="Chhaya" email="chhaya@gmail.com"/>
+    </div>
+ReactDOM.render(app,document.getElementById('root'));
+=====================================
+Example 5: passing data from parent component to child through props
+
+class Person extends React.Component
+{
+  constructor(props)
+  {
+    super(props);
+  }
+  render()
+  {
+    return(
+      <div>
+      <h2>{this.props.name} </h2>
+      <p> {this.props.age}</p>
+      </div>
+    );
+  }
+}
+class Card extends React.Component
+  {
+    render()
+    {
+      return(<Person name="Jack" age="24"/>)
+    }
+  }
+ReactDOM.render(
+  <Card /> ,
+  document.getElementById('root')
+);
+-----------------------------------------
+Assigning default data to the props.
+
+class Card extends React.Component{
+  constructor(props)
+  {
+    super(props);  
+  }
+  render()
+  {    
+    return(
+    <div className="card">
+        <h2>{this.props.name} </h2>   
+        <p>{this.props.email} </p>
+     </div>
+    );
+  }  
+}
+
+Card.defaultProps={name:'xxxxxxxxxx'}
+var app=<div><Card name="Chhaya" email="chhaya@gmail.com"/> 
+    <Card email="chhaya@gmail.com"/>
+    <Card name="Chhaya" email="chhaya@gmail.com"/>
+    </div>
+ReactDOM.render(app,document.getElementById('root'));
+---------------------
+part 3: HTML
+<div class="person">
+  <h2> Chhaya </h2>
+  <p> Chhayfsda.nikam@gmail.com </p>
+</div>
+<div id="p1"> </div>
+<div id="p2"> </div>
+</div>
+---------------------
+---------------------------------------------------------------------------------------------------
+propTypes in React
+
+We can use the propType for validating any data we are receiving from props. But before using it we will have to import it. Add the below line at the top of your index.js file :
+npm install prop-types
+
+import PropTypes from 'prop-types';
+Once we have imported propTypes we are ready to work with it. Just like defaultProps, propTypes are also objects where keys are the prop names and values are their types. Below syntax shows how to use propTypes:
+
+ComponentClassName.propTypes{
+    
+    propName1 : PropTypes.string,
+    propName2 : PropTypes.bool,
+    propName3 : PropTypes.array,
+    .
+    .
+    .
+    .
+    propNamen : PropTypes.anyOtherType
+}
+In the above Syntax, the ComponentClassName is the name of the class of Component, anyOtherType can be any type which we are allowed to pass as props. For the props which does not validates to the type of data specified by propTypes, a warning on the console will occur. Let us see a complete program that uses propTypes for validation for a better understanding:
+
+npm install prop-types;
+
+import PropTypes from 'prop-types'; 
+import React from 'react'; 
+import ReactDOM from 'react-dom'; 
+  
+// Component 
+class ComponentExample extends React.Component{ 
+    render(){ 
+        return( 
+                <div> 
+                    {/* printing all props */} 
+                    <h1> 
+                        {this.props.arrayProp} 
+                        <br /> 
+  
+                        {this.props.stringProp} 
+                        <br /> 
+  
+                        {this.props.numberProp} 
+                        <br /> 
+  
+                        {this.props.boolProp} 
+                        <br /> 
+                    </h1> 
+                </div> 
+            ); 
+    } 
+} 
+  
+// validating prop types 
+ComponentExample.propTypes = { 
+    arrayProp: PropTypes.array, 
+    stringProp: PropTypes.string.isRequired, 
+    numberProp: PropTypes.number, 
+    boolProp: PropTypes.bool, 
+} 
+  
+// creating default props 
+ComponentExample.defaultProps = { 
+  
+    arrayProp: ['Ram', 'Shyam', 'Raghav'], 
+    stringProp: "Hello", 
+    numberProp: "10", 
+    boolProp: true, 
+} 
+  
+ReactDOM.render( 
+    <ComponentExample  />,  
+    document.getElementById("root") 
+); 
+
+You can see in the above program that we are passing the prop named numberProp as a string but validating it as a number. Still, everything is rendered perfectly on the browser but our browser console has a warning message. This message clearly tells us that the prop named numberProp was expected to contain a numeric value but instead a string value is passed. You can go to the official doc of ReactJS to see all of the valid types a prop can take.
+
+Note: In recent versions of react the React.PropTypes is moved to a different package and we will have to install that package separately in order to use it. Please go to this link for installation instructions.
+--------------------------
+--validation for only one option from list
+Person.propTypes = {
+  gender: PropTypes.oneOf([
+    'female', 'male'
+  ])
+}
+
+-------------------------------------------------------------------------
+Example 2:
+Validating Props
+In this example, we are creating App component with all the props that we need. App.propTypes is used for props validation. If some of the props aren't using the correct type that we assigned, we will get a console warning. After we specify validation patterns, we will set App.defaultProps.
+
+App.jsx
+import React from 'react';
+
+class App extends React.Component {
+   render() {
+      return (
+         <div>
+            <h3>Array: {this.props.propArray}</h3>
+            <h3>Bool: {this.props.propBool ? "True..." : "False..."}</h3>
+            <h3>Func: {this.props.propFunc(3)}</h3>
+            <h3>Number: {this.props.propNumber}</h3>
+            <h3>String: {this.props.propString}</h3>
+            <h3>Object: {this.props.propObject.objectName1}</h3>
+            <h3>Object: {this.props.propObject.objectName2}</h3>
+            <h3>Object: {this.props.propObject.objectName3}</h3>
+         </div>
+      );
+   }
+}
+
+App.propTypes = {
+   propArray: React.PropTypes.array.isRequired,
+   propBool: React.PropTypes.bool.isRequired,
+   propFunc: React.PropTypes.func,
+   propNumber: React.PropTypes.number,
+   propString: React.PropTypes.string,
+   propObject: React.PropTypes.object
+}
+
+App.defaultProps = {
+   propArray: [1,2,3,4,5],
+   propBool: true,
+   propFunc: function(e){return e},
+   propNumber: 1,
+   propString: "String value...",
+   
+   propObject: {
+      objectName1:"objectValue1",
+      objectName2: "objectValue2",
+      objectName3: "objectValue3"
+   }
+}
+export default App;
+
+main.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App.jsx';
+
+ReactDOM.render(<App/>, document.getElementById('app'));
+---------------------------------------------------------------------------------------------------
+More inputs:
+JSX Prevents Injection Attacks
+It is safe to embed user input in JSX:
+
+const title = response.potentiallyMaliciousInput;
+// This is safe:
+const element = <h1>{title}</h1>;
+By default, React DOM escapes any values embedded in JSX before rendering them. Thus it ensures that you can never inject anything that’s not explicitly written in your application. Everything is converted to a string before being rendered. This helps prevent XSS (cross-site-scripting) attacks.
+===================================================================================
